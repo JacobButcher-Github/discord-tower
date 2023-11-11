@@ -1,25 +1,16 @@
 from discord import *
 
 
-intents = Intents.default()
-intents.message_content = True
+class TowerClient(Client):
+    async def on_ready(self):
+        print(f'Logged in as {self.user}')
+    
 
-client = Client(intents=intents)
+    async def on_message(self, message):
+        print(f'{message.author}: {message.content}')
 
+        if message.author == self.user:
+            return
 
-@client.event
-async def on_ready():
-    print(f'We have logged in as {client.user}')
-
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
-
-
-token = open('token.txt').read()
-client.run(token)
+        if message.content.startswith('$hello'):
+            await message.channel.send('Hello!')
