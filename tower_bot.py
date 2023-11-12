@@ -1,5 +1,6 @@
 from discord import Client
 from random import randint
+from initiative import *
 
 
 class TowerClient(Client):
@@ -41,9 +42,15 @@ class TowerClient(Client):
                     case 'caco':
                         res = self.caco_handler(args)
 
+                    case 'caco':
+                        res = self.caco_handler(args)
+
                     case 'crit': 
                         res = self.calc_crit(args)
-                    
+
+                    case 'initiative':
+                        res = self.init_handler(args)
+
                     case 'reset':
                         res = self.reset()
             
@@ -159,7 +166,7 @@ class TowerClient(Client):
             for i in range(3, len(args)):
                 res += args[i]+" "
                 self.batcon = res
-    
+        
         return res
     
 
@@ -274,6 +281,29 @@ class TowerClient(Client):
         return res
     
 
+    def caco_handler(self, args):
+        res = 'Not Set'
+
+        if len(args) == 2:
+            if (self.caco == 0):
+                return res
+            else:
+                res = f"Caco Atk: {self.caco}"
+
+        if len(args) == 4:
+            if (args[2] == "set"):
+                self.caco = int(args[3])
+                res = f"Caco Atk: {self.caco}"
+            elif (args[2] == "add"):
+                self.caco += int(args[3])
+                res = f"Caco Atk: {self.caco}"
+            elif (args[2] == "sub"):
+                self.caco -= int(args[3])
+                res = f"Caco Atk: {self.caco}"
+
+        return res
+
+
     def calc_crit(self, args):
         res = 'invalid crit'
 
@@ -301,6 +331,31 @@ class TowerClient(Client):
         return success
 
 
+    def init_handler(self, args):
+        res = "Error"
+
+        if (len(args) == 3 and args[2] == "next"):
+            res = self.roll_for.next_player()
+            return res
+        
+        elif(len(args) == 5 and args[2] == "add"):
+            res = f"{args[3]} added"
+            self.roll_for.add_player(args[3], int(args[4]))
+            return res
+        
+        elif(len(args) == 5 and args[2] == "update"):
+            res = f"{args[3]} updated"
+            self.roll_for.update_player(args[3], int(args[4]))
+            return res
+        
+        elif(len(args) == 4 and args[2] == "remove"):
+            res = f"{args[3]} removed"
+            self.roll_for.remove_player(args[3])
+            return res
+        
+        return res
+
+
     def reset(self):
         # State variables
         self.boss_stats = ''
@@ -309,5 +364,6 @@ class TowerClient(Client):
         self.density = 0
         self.turn = 0
         self.caco = 0
+        self.roll_for = Initiative()
 
         return 'all fields reset'
