@@ -310,4 +310,4 @@ class TowerClient(Client):
         self.turn = 0
         self.caco = 0
 
-        return 'all fields reset reset'
+        return 'all fields reset'
