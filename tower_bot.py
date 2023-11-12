@@ -186,15 +186,15 @@ class TowerClient(Client):
                         'Characters which have a skill named "Shinsu Resistance" are unaffected by the effects of shinsu density at levels equal ' +
                         'to or less than their shinsu resistance level.\n\n' +
 
-                        'Level 5 – Characters lose hp equal to the shinsu density level at the end of each turn\n' +
-                        'Level 10 – Weapons that are not needles, swords, spears, and hooks deal halved damage\n' +
-                        'Level 15 – Characters lose the ability to take positions\n' +
-                        'Level 20 – Magical skills are treated as though 10 less shinsu was used on them\n' +
-                        'Level 25 – Characters lose attack and speed equal to the shinsu density level\n' +
-                        'Level 30 – Weapons and items that are not needles, swords, spears, and hooks deal 0 damage and cease to function\n' +
-                        'Level 40 – Environmental effects are negated, magical skills are treated as though 30 less shinsu was used on them, ' +
+                        'Level 5 - Characters lose hp equal to the shinsu density level at the end of each turn\n' +
+                        'Level 10 - Weapons that are not needles, swords, spears, and hooks deal halved damage\n' +
+                        'Level 15 - Characters lose the ability to take positions\n' +
+                        'Level 20 - Magical skills are treated as though 10 less shinsu was used on them\n' +
+                        'Level 25 - Characters lose attack and speed equal to the shinsu density level\n' +
+                        'Level 30 - Weapons and items that are not needles, swords, spears, and hooks deal 0 damage and cease to function\n' +
+                        'Level 40 - Environmental effects are negated, magical skills are treated as though 30 less shinsu was used on them, ' +
                         'and physical attacks and skills deal halved damage\n' +
-                        'Level 50 – All entities lose the ability to move and take action'
+                        'Level 50 - All entities lose the ability to move and take action'
                     )
 
             case 4:
