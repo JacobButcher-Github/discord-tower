@@ -5,6 +5,9 @@ from random import randint
 class TowerClient(Client):
     async def on_ready(self):
         print(f'Logged in as {self.user}')
+
+        # State variables
+        self.density = 0
     
 
     async def on_message(self, message):
