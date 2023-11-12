@@ -11,6 +11,7 @@ class Initiative:
 
     def set_queue(self):
         self.player_list.sort(key = lambda x: x[0])
+        self.goingnext = deque()
 
         for i in self.player_list:
             if i[1] not in self.used and i[1] not in self.goingnext:
@@ -60,7 +61,7 @@ class Initiative:
     def display_queue(self):
         res = ""
 
-        for i in self.goingnext:
+        for i in self.goingnext[::-1]:
             res += f"{i}\n"
         
         return res
