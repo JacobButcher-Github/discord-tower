@@ -88,6 +88,8 @@ class TowerClient(Client):
             ".tower initiative add [Name] [Priority Speed] -> Prepares person in the queue\n" +
             ".tower initiative update [Name] [New Priority Speed] -> Updates person in queue\n" +
             ".tower initiative next -> Gives next person in the priority queue\n" +
+            ".tower initiative -> give list of players in queue" +
+            ".tower initiative list -> give list of all players" +
             ".tower initiative remove [Name] -> Removes a person from queue (If ko'd, for instance)\n\n" +
 
             ".tower reset -> resets all fields"
@@ -244,6 +246,7 @@ class TowerClient(Client):
                             
                         case 'add':
                             self.turn += num
+                            self.roll_for.next_turn()
                             res = f'turn moved to {self.turn}'
 
                         case 'sub':
@@ -307,6 +310,14 @@ class TowerClient(Client):
 
     def init_handler(self, args):
         res = "Error"
+
+        if (len(args) == 2):
+            res = self.roll_for.display_queue()
+            return res
+        
+        if (len(args) == 3 and args[3] == "list"):
+            res = self.roll_for.display_list()
+            return res
 
         if (len(args) == 3 and args[2] == "next"):
             res = self.roll_for.next_player()
