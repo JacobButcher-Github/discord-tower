@@ -240,10 +240,10 @@ class TowerClient(Client):
                             
                         case 'add':
                             self.turn += num
-                            res = f'density moved to {self.turn}'
+                            res = f'turn moved to {self.turn}'
 
                         case 'sub':
-                            self.density = max(0, self.density - num)
+                            self.turn = max(0, self.turn - num)
                             res = f'turn reverted to {self.turn}'
                 except:
                     pass
