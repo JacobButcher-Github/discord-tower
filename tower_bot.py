@@ -40,6 +40,9 @@ class TowerClient(Client):
                     case 'batcon':
                         res = self.batcon_handler(args)
 
+                    case 'caco':
+                        res = self.caco_handler(args)
+
                     case 'crit': 
                         res = self.calc_crit(args)
             
@@ -69,10 +72,10 @@ class TowerClient(Client):
             ".tower turn add [Number] -> Adds number to current turn\n" +
             ".tower turn sub [Number] -> Subtracts number from current turn\n" +
             ".tower turn -> Displays current turn\n\n" +
+
             ".tower caco set [Number] -> Set current caco atk value to number\n" +
             ".tower caco add [Number] -> Add number to current caco atk value\n" +
-            ".tower caco sub [Number] -> Subtract number from current caco atk value\n" +
-            ".tower caco flag [Number] -> Returns flag buff given\n" +
+            ".tower caco sub [Number] -> Subtract number from current caco atk value\n\n" +
 
             ".tower crit [chance] [damage of move] [# of times used] -> Calculates the damage complete with crit\n\n" +
 
@@ -134,7 +137,7 @@ class TowerClient(Client):
             elif (args[2] == "sub"):
                 self.boss_hp -= int(args[3])
                 res = f"Boss Hp: {self.boss_hp}"
-        
+
         return res
 
 
@@ -152,6 +155,29 @@ class TowerClient(Client):
     
         return res
     
+
+    def caco_hander(self, args):
+        res = 'Not Set'
+
+        if len(args) == 2:
+            if (self.caco == 0):
+                return res
+            else:
+                res = f"Caco Atk: {self.caco}"
+
+        if len(args) == 4:
+            if (args[2] == "set"):
+                self.caco = int(args[3])
+                res = f"Caco Atk: {self.caco}"
+            elif (args[2] == "add"):
+                self.caco += int(args[3])
+                res = f"Caco Atk: {self.caco}"
+            elif (args[2] == "sub"):
+                self.caco -= int(args[3])
+                res = f"Caco Atk: {self.caco}"
+
+        return res
+
 
     def calc_crit(self, args):
         # .tower crit [chance] [damage of move] [# of times used]
