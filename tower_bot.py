@@ -7,7 +7,13 @@ class TowerClient(Client):
         print(f'Logged in as {self.user}')
 
         # State variables
+        self.stats = ""
+        self.hp = 0
+
+        self.batcon = ""
         self.density = 0
+
+        self.caco = 0
     
 
     async def on_message(self, message):
@@ -23,31 +29,44 @@ class TowerClient(Client):
             if len(args) > 1:
                 match args[1]:
                     case 'help':
-                        res = self.help_text(args)
+                        res = self.help_text()
+                    
+                    case 'stats':
+                        res = self.stats(args)
+
                     case 'crit': 
                         res = self.calc_crit(args)
             
             await message.channel.send(res)
     
-    def help_text(self, args):
-        res = ".tower stats set [atk][hp][spd][shi][???] -> Sets current boss to these stats\n" +\
-              ".tower stats -> return stats of current boss\n\n" +\
-              +\
-              ".tower hp set -> Sets current boss to this hp\n" +\
-              ".tower hp add [Number] -> Adds number to  current boss hp\n" +\
-              ".tower hp sub [Number] -> Subtracts number from current boss hp\n" +\
-              ".tower hp -> Prints current boss hp\n\n" +\
-              +\
-              ".tower batcon set [String]-> Sets current battle condition\n" +\
-              ".tower bacon -> prints current battle condition\n" +\
-              +\
-              ".tower density rules -> prints density rules from TCR (my beloved)\n" +\
-              ".tower density set [Number] -> Sets current density to number\n" +\
-              ".tower density add [Number] -> Adds number to current density\n" +\
-              ".tower density sub [Number] -> Subtracts number from current density\n" +\
-              ".tower density -> Displays current Shinsu Density" +\
-              +\
-              ""
+
+    def help_text(self):
+        res = (
+                ".tower stats set [atk] [hp] [spd] [shi] [???] -> Sets current boss to these stats\n" +
+                ".tower stats -> return stats of current boss\n\n" +
+
+                ".tower hp set -> Sets current boss to this hp\n" +
+                ".tower hp add [Number] -> Adds number to  current boss hp\n" +
+                ".tower hp sub [Number] -> Subtracts number from current boss hp\n" +
+                ".tower hp -> Prints current boss hp\n\n" +
+
+                ".tower batcon set [String]-> Sets current battle condition\n" +
+                ".tower batcon -> prints current battle condition\n" +
+
+                ".tower density rules -> prints density rules from TCR (my beloved)\n" +
+                ".tower density set [Number] -> Sets current density to number\n" +
+                ".tower density add [Number] -> Adds number to current density\n" +
+                ".tower density sub [Number] -> Subtracts number from current density\n" +
+                ".tower density -> Displays current Shinsu Density" +
+                
+                ""
+        )
+
+        return res
+
+
+    def stats(args):
+        pass
 
 
     def calc_crit(self, args):
@@ -76,5 +95,3 @@ class TowerClient(Client):
             success += 1
 
         return success
-
-
