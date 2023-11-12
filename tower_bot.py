@@ -114,24 +114,29 @@ class TowerClient(Client):
 
         return res
 
+
     def hp_handler(self, args):
         res = 'Not Set'
+
         if len(args) == 2:
             if (self.boss_hp == 0):
                 return res
             else:
-                res = "Boss Hp: " + self.boss_hp
+                res = f"Boss Hp: {self.boss_hp}"
+
         if len(args) == 4:
             if (args[2] == "set"):
                 self.boss_hp = int(args[3])
                 res = f"Set Boss Hp to: {self.boss_hp}"
-            elif (args[3] == "add"):
+            elif (args[2] == "add"):
                 self.boss_hp += int(args[3])
                 res = f"Boss Hp: {self.boss_hp}"
-            elif (args[4] == "sub"):
+            elif (args[2] == "sub"):
                 self.boss_hp -= int(args[3])
                 res = f"Boss Hp: {self.boss_hp}"
+        
         return res
+
 
     def calc_crit(self, args):
         # .tower crit [chance] [damage of move] [# of times used]
