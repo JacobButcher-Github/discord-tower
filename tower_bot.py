@@ -5,14 +5,7 @@ from random import randint
 class TowerClient(Client):
     async def on_ready(self):
         print(f'Logged in as {self.user}')
-
-        # State variables
-        self.boss_stats = ''
-        self.boss_hp = 0
-        self.batcon = ''
-        self.density = 0
-        self.turn = 0
-        self.caco = 0
+        self.reset()
     
 
     async def on_message(self, message):
@@ -309,6 +302,7 @@ class TowerClient(Client):
 
 
     def reset(self):
+        # State variables
         self.boss_stats = ''
         self.boss_hp = 0
         self.batcon = ''
