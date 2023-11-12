@@ -50,6 +50,9 @@ class TowerClient(Client):
 
                     case 'crit': 
                         res = self.calc_crit(args)
+                    
+                    case 'reset':
+                        res = self.reset()
             
             await message.channel.send(res)
     
@@ -303,3 +306,14 @@ class TowerClient(Client):
             success += 1
 
         return success
+
+
+    def reset(self):
+        self.boss_stats = ''
+        self.boss_hp = 0
+        self.batcon = ''
+        self.density = 0
+        self.turn = 0
+        self.caco = 0
+
+        return 'all fields reset reset'
