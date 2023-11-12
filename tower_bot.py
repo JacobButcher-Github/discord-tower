@@ -14,16 +14,38 @@ class TowerClient(Client):
         txt = message.content.lower()
 
         if txt.startswith('.tower'):
-            res = 'from tower?' # Default response
+            res = 'from tower? .tower help for list of commands.' # Default response
             args = txt.split()
 
             if len(args) > 1:
                 match args[1]:
+                    case 'help':
+                        res = self.help_text(args)
                     case 'crit': 
                         res = self.calc_crit(args)
             
             await message.channel.send(res)
     
+    def help_text(self, args):
+        res = ".tower stats set [atk][hp][spd][shi][???] -> Sets current boss to these stats\n" +\
+              ".tower stats -> return stats of current boss\n\n" +\
+              +\
+              ".tower hp set -> Sets current boss to this hp\n" +\
+              ".tower hp add [Number] -> Adds number to  current boss hp\n" +\
+              ".tower hp sub [Number] -> Subtracts number from current boss hp\n" +\
+              ".tower hp -> Prints current boss hp\n\n" +\
+              +\
+              ".tower batcon set [String]-> Sets current battle condition\n" +\
+              ".tower bacon -> prints current battle condition\n" +\
+              +\
+              ".tower density rules -> prints density rules from TCR (my beloved)\n" +\
+              ".tower density set [Number] -> Sets current density to number\n" +\
+              ".tower density add [Number] -> Adds number to current density\n" +\
+              ".tower density sub [Number] -> Subtracts number from current density\n" +\
+              ".tower density -> Displays current Shinsu Density" +\
+              +\
+              ""
+
 
     def calc_crit(self, args):
         # .tower crit [chance] [damage of move] [# of times used]
@@ -51,3 +73,5 @@ class TowerClient(Client):
             success += 1
 
         return success
+
+
