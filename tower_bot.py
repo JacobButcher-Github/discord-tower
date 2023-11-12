@@ -1,4 +1,4 @@
-from discord import *
+from discord import Client
 from random import randint
 
 

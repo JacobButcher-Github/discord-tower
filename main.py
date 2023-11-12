@@ -1,5 +1,5 @@
-from discord import *
-from tower_bot import *
+from discord import Intents
+from tower_bot import TowerClient
 
 
 if __name__ == '__main__':
