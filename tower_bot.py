@@ -150,7 +150,7 @@ class TowerClient(Client):
         match len(args):
             case 2:
                 if self.density:
-                    res = self.density
+                    res = f'{self.density} density'
                 else:
                     res = 'density not set'
             
