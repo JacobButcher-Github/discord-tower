@@ -33,6 +33,12 @@ class TowerClient(Client):
                     
                     case 'stats':
                         res = self.stats(args)
+                    
+                    case 'hp':
+                        res = self.hp_handler(args)
+                    
+                    case 'batcon':
+                        res = self.batcon_handler(args)
 
                     case 'crit': 
                         res = self.calc_crit(args)
@@ -108,6 +114,24 @@ class TowerClient(Client):
 
         return res
 
+    def hp_handler(self, args):
+        res = 'not set'
+        if len(args) == 2:
+            if (self.boss_hp == 0):
+                return res
+            else:
+                res = "Boss Hp: " + self.boss_hp
+        if len(args) == 4:
+            if (args[2] == "set"):
+                self.boss_hp = int(args[3])
+                res = "Set Boss Hp to: " + self.boss_hp
+            elif (args[3] == "add"):
+                self.boss_hp += int(args[3])
+                res = "Boss Hp: " + self.boss_hp
+            elif (args[4] == "sub"):
+                self.boss_hp -= int(args[3])
+                res = "Boss Hp: " + self.boss_hp
+        return res
 
     def calc_crit(self, args):
         # .tower crit [chance] [damage of move] [# of times used]
