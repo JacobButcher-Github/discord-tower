@@ -1,10 +1,8 @@
 from collections import deque
 
 class Initiative:
-
-
     def __init__(self):
-        self.goingnext = dequeue()
+        self.goingnext = deque()
         self.player_list = list()
 
 
@@ -16,7 +14,7 @@ class Initiative:
         
 
     def add_player(self, name, prio):
-        player_list.append((prio, name))
+        self.player_list.append((prio, name))
         self.set_queue()
 
 
@@ -35,8 +33,7 @@ class Initiative:
                 break
         self.setqueue()
 
-    def next_player(self):
-        next = self.goingnext.popright()
-        return next
-        
 
+    def next_player(self):
+        next = self.goingnext.pop()
+        return next

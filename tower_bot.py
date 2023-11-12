@@ -1,6 +1,6 @@
 from discord import Client
 from random import randint
-from initiative import *
+from initiative import Initiative
 
 
 class TowerClient(Client):
@@ -38,9 +38,6 @@ class TowerClient(Client):
                     
                     case 'turn':
                         res = self.turn_handler(args)
-
-                    case 'caco':
-                        res = self.caco_handler(args)
 
                     case 'caco':
                         res = self.caco_handler(args)
@@ -257,29 +254,6 @@ class TowerClient(Client):
         
         return res
 
-
-    def caco_handler(self, args):
-        res = 'Not Set'
-
-        if len(args) == 2:
-            if (self.caco == 0):
-                return res
-            else:
-                res = f"Caco Atk: {self.caco}"
-
-        if len(args) == 4:
-            if (args[2] == "set"):
-                self.caco = int(args[3])
-                res = f"Caco Atk: {self.caco}"
-            elif (args[2] == "add"):
-                self.caco += int(args[3])
-                res = f"Caco Atk: {self.caco}"
-            elif (args[2] == "sub"):
-                self.caco -= int(args[3])
-                res = f"Caco Atk: {self.caco}"
-
-        return res
-    
 
     def caco_handler(self, args):
         res = 'Not Set'
