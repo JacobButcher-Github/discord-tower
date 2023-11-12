@@ -10,7 +10,7 @@ class TowerClient(Client):
     async def on_message(self, message):
         if message.author == self.user:
             return
-
+        
         txt = message.content.lower()
 
         if txt.startswith('.tower'):
@@ -30,13 +30,15 @@ class TowerClient(Client):
         res = 'invalid crit'
 
         if len(args) == 5:
-            chance = int(args[2])
-            dmg = int(args[3])
-            times = int(args[4])
+            try:
+                chance = int(args[2])
+                dmg = int(args[3])
+                times = int(args[4])
 
-            if isinstance(chance, int) and isinstance(dmg, int) and isinstance(times, int):
                 crit_dmg = dmg * times * (2 ** self.roll_success(chance))
                 res = f'crit for {crit_dmg}'
+            except:
+                pass
         
         return res
 
