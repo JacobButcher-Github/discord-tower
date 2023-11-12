@@ -1,5 +1,6 @@
 from collections import deque
 
+
 class Initiative:
     def __init__(self):
         self.goingnext = deque()
@@ -40,18 +41,24 @@ class Initiative:
         next = self.goingnext.pop()
         self.used.add(next)
         return next
-    
+
+
     def next_turn(self):
         self.used = set()
 
+
     def display_list(self):
         res = ""
-        for i in self.player_list:
+
+        for i in self.player_list[::-1]:
             res += (f"{i[1]}: {i[0]}\n")
         return res
     
+
     def display_queue(self):
         res = ""
+
         for i in self.goingnext:
-            res += "i\n"
+            res += f"{i}\n"
+        
         return res
