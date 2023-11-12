@@ -290,7 +290,11 @@ class TowerClient(Client):
                 dmg = int(args[3])
                 times = int(args[4])
 
-                crit_dmg = dmg * times * (2 ** self.roll_success(chance))
+                crit_dmg = 0 
+                
+                for _ in range(times):
+                    crit_dmg += (dmg * (2 ** self.roll_success(chance)))
+                
                 res = f'crit for {crit_dmg}'
             except:
                 pass
