@@ -1,5 +1,6 @@
 from discord import *
 from random import randint
+from initiative import *
 
 
 class TowerClient(Client):
@@ -14,6 +15,8 @@ class TowerClient(Client):
         self.density = 0
 
         self.caco = 0
+
+        self.roll_for = Initiative()
     
 
     async def on_message(self, message):
@@ -45,6 +48,9 @@ class TowerClient(Client):
 
                     case 'crit': 
                         res = self.calc_crit(args)
+                    
+                    case 'initiative':
+                        res = self.init_handler(args)
             
             await message.channel.send(res)
     
@@ -209,3 +215,27 @@ class TowerClient(Client):
             success += 1
 
         return success
+
+    def init_handler(self, args):
+        res = "Error"
+
+        if (len(args) == 3 and args[2] == "next"):
+            res = self.roll_for.next_player()
+            return res
+        
+        elif(len(args) == 5 and args[2] == "add"):
+            res = f"{args[3]} added"
+            self.roll_for.add_player(args[3], int(args[4]))
+            return res
+        
+        elif(len(args) == 5 and args[2] == "update"):
+            res = f"{args[3]} updated"
+            self.roll_for.update_player(args[3], int(args[4]))
+            return res
+        
+        elif(len(args) == 4 and args[2] == "remove"):
+            res = f"{args[3]} removed"
+            self.roll_for.remove_player(args[3])
+            return res
+        
+        return res
