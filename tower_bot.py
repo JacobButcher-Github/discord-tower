@@ -7,8 +7,8 @@ class TowerClient(Client):
         print(f'Logged in as {self.user}')
 
         # State variables
-        self.stats = ""
-        self.hp = 0
+        self.boss_stats = ""
+        self.boss_hp = 0
 
         self.batcon = ""
         self.density = 0
@@ -58,15 +58,17 @@ class TowerClient(Client):
                 ".tower density add [Number] -> Adds number to current density\n" +
                 ".tower density sub [Number] -> Subtracts number from current density\n" +
                 ".tower density -> Displays current Shinsu Density" +
-                
+
                 ""
         )
 
         return res
 
 
-    def stats(args):
-        pass
+    def stats(self, args):
+        #
+
+        return self.boss_stats
 
 
     def calc_crit(self, args):
