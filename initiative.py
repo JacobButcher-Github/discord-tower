@@ -5,18 +5,20 @@ class Initiative:
         self.goingnext = deque()
         self.player_list = list()
         self.used = set()
+        self.exists = set()
 
 
     def set_queue(self):
         self.player_list.sort(key = lambda x: x[0])
 
         for i in self.player_list:
-            if i[1] not in self.used:
+            if i[1] not in self.used and i[1] not in self.goingnext:
                 self.goingnext.append(i[1])
         
 
     def add_player(self, name, prio):
         self.player_list.append((prio, name))
+        self.exists.add(name)
         self.set_queue()
 
 
@@ -53,5 +55,5 @@ class Initiative:
     def display_queue(self):
         res = ""
         for i in self.goingnext:
-            res += "i\n"
+            res += f"{i}\n"
         return res
