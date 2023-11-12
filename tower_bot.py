@@ -88,8 +88,8 @@ class TowerClient(Client):
             ".tower initiative add [Name] [Priority Speed] -> Prepares person in the queue\n" +
             ".tower initiative update [Name] [New Priority Speed] -> Updates person in queue\n" +
             ".tower initiative next -> Gives next person in the priority queue\n" +
-            ".tower initiative -> give list of players in queue" +
-            ".tower initiative list -> give list of all players" +
+            ".tower initiative -> give list of players in queue\n" +
+            ".tower initiative list -> give list of all players\n" +
             ".tower initiative remove [Name] -> Removes a person from queue (If ko'd, for instance)\n\n" +
 
             ".tower reset -> resets all fields"
@@ -313,11 +313,11 @@ class TowerClient(Client):
 
         if (len(args) == 2):
             res = self.roll_for.display_queue()
-            return res
+            return res if res else 'empty'
         
-        if (len(args) == 3 and args[3] == "list"):
+        if (len(args) == 3 and args[2] == "list"):
             res = self.roll_for.display_list()
-            return res
+            return res if res else 'empty'
 
         if (len(args) == 3 and args[2] == "next"):
             res = self.roll_for.next_player()
