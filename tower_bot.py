@@ -73,6 +73,7 @@ class TowerClient(Client):
             ".tower turn sub [Number] -> Subtracts number from current turn\n" +
             ".tower turn -> Displays current turn\n\n" +
 
+            ".tower caco -> Gives current value of caco\n" +
             ".tower caco set [Number] -> Set current caco atk value to number\n" +
             ".tower caco add [Number] -> Add number to current caco atk value\n" +
             ".tower caco sub [Number] -> Subtract number from current caco atk value\n\n" +
@@ -82,7 +83,9 @@ class TowerClient(Client):
             ".tower initiative add [Name] [Priority Speed] -> Prepares person in the queue\n" +
             ".tower initiative update [Name] [New Priority Speed] -> Updates person in queue\n" +
             ".tower initiative next -> Gives next person in the priority queue\n" +
-            ".tower initiative remove [Name] -> Removes a person from queue (If ko'd, for instance)"
+            ".tower initiative remove [Name] -> Removes a person from queue (If ko'd, for instance)\n\n" +
+
+            ".tower reset -> resets all fields"
         )
 
         return res
@@ -151,12 +154,13 @@ class TowerClient(Client):
         if (len(args) > 3 and args[2] == "set"):
             res = ""
             for i in range(3, len(args)):
-                res += args[i]
+                res += args[i]+" "
+                self.batcon = res
     
         return res
     
 
-    def caco_hander(self, args):
+    def caco_handler(self, args):
         res = 'Not Set'
 
         if len(args) == 2:
