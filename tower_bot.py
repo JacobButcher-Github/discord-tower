@@ -144,6 +144,21 @@ class TowerClient(Client):
         return res
 
 
+    def batcon_handler(self, args):
+        res = "Not Set"
+        
+        if (len(args) == 2):
+            if (self.batcon != ""):
+                res = self.batcon
+
+        if (len(args) > 3 and args[2] == "set"):
+            res = ""
+            for i in range(3, len(args)):
+                res += args[i]
+    
+        return res
+    
+
     def density_handler(self, args):
         res = 'invalid density'
 
