@@ -78,7 +78,6 @@ class TowerClient(Client):
             ".tower turn sub [Number] -> Subtracts number from current turn\n" +
             ".tower turn -> Displays current turn\n\n" +
 
-
             ".tower caco set [Number] -> Set current caco atk value to number\n" +
             ".tower caco add [Number] -> Add number to current caco atk value\n" +
             ".tower caco sub [Number] -> Subtract number from current caco atk value\n\n" +
@@ -97,29 +96,31 @@ class TowerClient(Client):
     def stats(self, args):
         res = 'invalid stats'
 
-        if len(args) == 2:
-            if self.boss_stats:
-                res = self.boss_stats
-            else:
-                res = 'boss stats not set'
-        elif len(args) in [7, 8]:
-            if args[2] == 'set':
-                try:
-                    atk = int(args[3])
-                    hp = int(args[4])
-                    spd = int(args[5])
-                    shi = int(args[6])
-                    
-                    self.boss_stats = f'{atk}atk/{hp}hp/{spd}spd/{shi}shi'
-                    self.boss_hp = hp
+        match len(args):
+            case 2:
+                if self.boss_stats:
+                    res = self.boss_stats
+                else:
+                    res = 'boss stats not set'
+            
+            case 7 | 8:
+                if args[2] == 'set':
+                    try:
+                        atk = int(args[3])
+                        hp = int(args[4])
+                        spd = int(args[5])
+                        shi = int(args[6])
+                        
+                        self.boss_stats = f'{atk}atk/{hp}hp/{spd}spd/{shi}shi'
+                        self.boss_hp = hp
 
-                    if len(args) == 8:
-                        fifth = int(args[7])
-                        self.boss_stats += f'/{fifth}???'
-                    
-                    res = 'stats set'
-                except:
-                    pass
+                        if len(args) == 8:
+                            fifth = int(args[7])
+                            self.boss_stats += f'/{fifth}???'
+                        
+                        res = 'stats set'
+                    except:
+                        pass
 
         return res
 
@@ -159,29 +160,6 @@ class TowerClient(Client):
             for i in range(3, len(args)):
                 res += args[i]
     
-        return res
-    
-
-    def caco_hander(self, args):
-        res = 'Not Set'
-
-        if len(args) == 2:
-            if (self.caco == 0):
-                return res
-            else:
-                res = f"Caco Atk: {self.caco}"
-
-        if len(args) == 4:
-            if (args[2] == "set"):
-                self.caco = int(args[3])
-                res = f"Caco Atk: {self.caco}"
-            elif (args[2] == "add"):
-                self.caco += int(args[3])
-                res = f"Caco Atk: {self.caco}"
-            elif (args[2] == "sub"):
-                self.caco -= int(args[3])
-                res = f"Caco Atk: {self.caco}"
-
         return res
     
 
@@ -241,18 +219,62 @@ class TowerClient(Client):
         return res
     
 
-    """
-    ".tower turn set [Number] -> Set current turn to number\n" +
-    ".tower turn add [Number] -> Adds number to current turn\n" +
-    ".tower turn sub [Number] -> Subtracts number from current turn\n" +
-    ".tower turn -> Displays current turn\n\n" +
-    """
-    def turn_handler(args):
-        pass
+    def turn_handler(self, args):
+        res = 'invalid turn'
 
+        match len(args):
+            case 2:
+                if self.turn:
+                    res = f'Turn {self.turn}'
+                else:
+                    res = 'turn not set'
+
+            case 4:
+                try:
+                    num = int(args[3])
+
+                    match args[2]:
+                        case 'set':
+                            self.turn = num
+                            res = f'turn set to {self.turn}'
+                            
+                        case 'add':
+                            self.turn += num
+                            res = f'density moved to {self.turn}'
+
+                        case 'sub':
+                            self.density = max(0, self.density - num)
+                            res = f'turn reverted to {self.turn}'
+                except:
+                    pass
+        
+        return res
+
+
+    def caco_handler(self, args):
+        res = 'Not Set'
+
+        if len(args) == 2:
+            if (self.caco == 0):
+                return res
+            else:
+                res = f"Caco Atk: {self.caco}"
+
+        if len(args) == 4:
+            if (args[2] == "set"):
+                self.caco = int(args[3])
+                res = f"Caco Atk: {self.caco}"
+            elif (args[2] == "add"):
+                self.caco += int(args[3])
+                res = f"Caco Atk: {self.caco}"
+            elif (args[2] == "sub"):
+                self.caco -= int(args[3])
+                res = f"Caco Atk: {self.caco}"
+
+        return res
+    
 
     def calc_crit(self, args):
-        # .tower crit [chance] [damage of move] [# of times used]
         res = 'invalid crit'
 
         if len(args) == 5:
