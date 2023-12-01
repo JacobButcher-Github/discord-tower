@@ -16,6 +16,7 @@ class TowerClient(Client):
         txt = message.content.lower()
 
         if txt.startswith('.tower'):
+            print(f'{message.author}: {txt}') # Logging purposes
             res = 'from tower? .tower help for list of commands.' # Default response
             args = txt.split()
 
