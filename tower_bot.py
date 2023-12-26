@@ -51,6 +51,9 @@ class TowerClient(Client):
 
                     case 'reset':
                         res = self.reset()
+                    
+                    case 'tcr':
+                        res = self.tcr()
             
             await message.channel.send(res)
     
@@ -361,3 +364,7 @@ class TowerClient(Client):
         self.roll_for = Initiative()
 
         return 'all fields reset'
+    
+
+    def tcr(self):
+        return '<https://drmmo.proboards.com/thread/6403/tower-comprehensive-rules>'
