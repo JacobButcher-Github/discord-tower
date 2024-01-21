@@ -367,4 +367,5 @@ class TowerClient(Client):
     
 
     def tcr(self):
-        return '<https://drmmo.proboards.com/thread/6403/tower-comprehensive-rules>'
+        return ('<https://drmmo.proboards.com/thread/6403/tower-comprehensive-rules>\n' +
+                'https://media.discordapp.net/attachments/245589536845856777/1111426152096071760/makesweet-ghv12k.gif?ex=65a070c3&is=658dfbc3&hm=25dd2c292fae849b2a832804759a5b43aae9e016c3913829f5826de693e3dab6&')
