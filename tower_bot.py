@@ -45,6 +45,9 @@ class TowerClient(Client):
 
                     case 'crit': 
                         res = self.calc_crit(args)
+                    
+                    case 'roll':
+                        res = self.roll(args)
 
                     case 'initiative':
                         res = self.init_handler(args)
@@ -88,6 +91,7 @@ class TowerClient(Client):
             ".tower caco sub [Number] -> Subtract number from current caco atk value\n\n" +
 
             ".tower crit [chance] [damage of move] [# of times used] -> Calculates the damage complete with crit\n\n" +
+            ".tower roll [optional number]d[sides]"
 
             ".tower initiative add [Name] [Priority Speed] -> Prepares person in the queue\n" +
             ".tower initiative update [Name] [New Priority Speed] -> Updates person in queue\n" +
@@ -307,6 +311,38 @@ class TowerClient(Client):
             except:
                 pass
         
+        return res
+    
+
+    def roll(self, args):
+        res = 'invalid roll'
+
+        if len(args) == 3:
+            try:
+                s = args[2].split('d')
+
+                if s[0]:
+                    times = int(s[0])
+                    dice = int(s[1])
+
+                    if times > 0 and dice > 0:
+                        rolls = []
+
+                        for _ in range(times):
+                            rolls.append(randint(1, dice))
+
+                        res = f'{sum(rolls)}\t|'
+
+                        for roll in rolls:
+                            res += f'\t{roll}'
+                else:
+                    die = int(s[1])
+
+                    if die > 0:
+                        res = f'{randint(1, die)}'
+            except:
+                pass
+
         return res
 
 
