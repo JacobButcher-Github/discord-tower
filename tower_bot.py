@@ -1,6 +1,11 @@
-from discord import Client
+from discord import Client, DMChannel, GroupChannel
 from random import randint
 from initiative import Initiative
+
+
+MAX_ROLLS = 100
+MAX_SIDES = 1000
+LTG = 'https://tenor.com/view/low-tier-god-ltg-gif-24660602'
 
 
 class TowerClient(Client):
@@ -10,20 +15,20 @@ class TowerClient(Client):
     
 
     async def on_message(self, message):
-        if message.author == self.user:
+        if message.author == self.user or type(message.channel) in [DMChannel, GroupChannel]:
             return
         
         txt = message.content.lower()
 
         if txt.startswith('.tower'):
-            print(f'{message.author}: {txt}') # Logging purposes
+            print(f'{message.author} ({message.created_at}): {txt}') # Logging purposes
             res = 'from tower? .tower help for list of commands.' # Default response
             args = txt.split()
 
             if len(args) > 1:
                 match args[1]:
                     case 'help':
-                        res = self.help_text()
+                        res = self.help_text(args)
                     
                     case 'stats':
                         res = self.stats(args)
@@ -61,47 +66,61 @@ class TowerClient(Client):
             await message.channel.send(res)
     
 
-    def help_text(self):
-        res = (
-            ".tower stats set [atk] [hp] [spd] [shi] [???] -> Sets current boss to these stats\n" +
-            ".tower stats -> return stats of current boss\n\n" +
+    def help_text(self, args):
+        res = '.tower help [1-4]'
 
-            ".tower hp set [Number] -> Sets current boss to this hp\n" +
-            ".tower hp add [Number] -> Adds number to  current boss hp\n" +
-            ".tower hp sub [Number] -> Subtracts number from current boss hp\n" +
-            ".tower hp -> Prints current boss hp\n\n" +
+        if len(args) == 3:
+            match args[2]:
+                case '1':
+                    res = (
+                        ".tower stats set [atk] [hp] [spd] [shi] [???] -> Sets current boss to these stats\n" +
+                        ".tower stats -> return stats of current boss\n\n" +
 
-            ".tower batcon set [String]-> Sets current battle condition\n" +
-            ".tower batcon -> prints current battle condition\n\n" +
+                        ".tower hp set [Number] -> Sets current boss to this hp\n" +
+                        ".tower hp add [Number] -> Adds number to  current boss hp\n" +
+                        ".tower hp sub [Number] -> Subtracts number from current boss hp\n" +
+                        ".tower hp -> Prints current boss hp\n\n" +
 
-            ".tower density rules -> prints density rules from TCR (my beloved)\n" +
-            ".tower density set [Number] -> Sets current density to number\n" +
-            ".tower density add [Number] -> Adds number to current density\n" +
-            ".tower density sub [Number] -> Subtracts number from current density\n" +
-            ".tower density -> Displays current Shinsu Density\n\n" +
+                        ".tower turn set [Number] -> Set current turn to number\n" +
+                        ".tower turn add [Number] -> Adds number to current turn\n" +
+                        ".tower turn sub [Number] -> Subtracts number from current turn\n" +
+                        ".tower turn -> Displays current turn"
+                    )
+                
+                case '2':
+                    res = (
+                        ".tower batcon set [String]-> Sets current battle condition\n" +
+                        ".tower batcon -> prints current battle condition\n\n" +
 
-            ".tower turn set [Number] -> Set current turn to number\n" +
-            ".tower turn add [Number] -> Adds number to current turn\n" +
-            ".tower turn sub [Number] -> Subtracts number from current turn\n" +
-            ".tower turn -> Displays current turn\n\n" +
+                        ".tower density rules -> prints density rules from TCR (my beloved)\n" +
+                        ".tower density set [Number] -> Sets current density to number\n" +
+                        ".tower density add [Number] -> Adds number to current density\n" +
+                        ".tower density sub [Number] -> Subtracts number from current density\n" +
+                        ".tower density -> Displays current Shinsu Density"
+                    )
+                
+                case '3':
+                    res = (
+                        ".tower caco -> Gives current value of caco\n" +
+                        ".tower caco set [Number] -> Set current caco atk value to number\n" +
+                        ".tower caco add [Number] -> Add number to current caco atk value\n" +
+                        ".tower caco sub [Number] -> Subtract number from current caco atk value\n\n" +
 
-            ".tower caco -> Gives current value of caco\n" +
-            ".tower caco set [Number] -> Set current caco atk value to number\n" +
-            ".tower caco add [Number] -> Add number to current caco atk value\n" +
-            ".tower caco sub [Number] -> Subtract number from current caco atk value\n\n" +
+                        ".tower crit [chance] [damage of move] [# of times used] -> Calculates the damage complete with crit\n" +
+                        ".tower roll [optional number (max 100)]d[sides (max 1000)]"
+                    )
+                
+                case '4':
+                    res = (
+                        ".tower initiative add [Name] [Priority Speed] -> Prepares person in the queue\n" +
+                        ".tower initiative update [Name] [New Priority Speed] -> Updates person in queue\n" +
+                        ".tower initiative next -> Gives next person in the priority queue\n" +
+                        ".tower initiative -> give list of players in queue\n" +
+                        ".tower initiative list -> give list of all players\n" +
+                        ".tower initiative remove [Name] -> Removes a person from queue (If ko'd, for instance)\n\n" +
 
-            ".tower crit [chance] [damage of move] [# of times used] -> Calculates the damage complete with crit\n\n" +
-            ".tower roll [optional number]d[sides]"
-
-            ".tower initiative add [Name] [Priority Speed] -> Prepares person in the queue\n" +
-            ".tower initiative update [Name] [New Priority Speed] -> Updates person in queue\n" +
-            ".tower initiative next -> Gives next person in the priority queue\n" +
-            ".tower initiative -> give list of players in queue\n" +
-            ".tower initiative list -> give list of all players\n" +
-            ".tower initiative remove [Name] -> Removes a person from queue (If ko'd, for instance)\n\n" +
-
-            ".tower reset -> resets all fields"
-        )
+                        ".tower reset -> resets all fields"
+                    )
 
         return res
 
@@ -319,27 +338,39 @@ class TowerClient(Client):
 
         if len(args) == 3:
             try:
-                s = args[2].split('d')
+                if 'd' in args[2]:
+                    s = args[2].split('d')
 
-                if s[0]:
-                    times = int(s[0])
-                    dice = int(s[1])
+                    if s[0]:
+                        times = int(s[0])
+                        dice = int(s[1])
 
-                    if times > 0 and dice > 0:
-                        rolls = []
+                        if 0 < times <= MAX_ROLLS and 0 < dice <= MAX_SIDES:
+                            rolls = []
 
-                        for _ in range(times):
-                            rolls.append(randint(1, dice))
+                            for _ in range(times):
+                                rolls.append(randint(1, dice))
 
-                        res = f'{sum(rolls)}\t|'
+                            res = f'{sum(rolls)}\t|'
 
-                        for roll in rolls:
-                            res += f'\t{roll}'
+                            for roll in rolls:
+                                res += f'\t{roll}'
+                        else:
+                            res = LTG
+                    else:
+                        die = int(s[1])
+
+                        if 0 < die <= MAX_SIDES:
+                            res = f'{randint(1, die)}'
+                        else:
+                            res = LTG
                 else:
-                    die = int(s[1])
+                    die = int(args[2])
 
-                    if die > 0:
+                    if 0 < die <= MAX_SIDES:
                         res = f'{randint(1, die)}'
+                    else:
+                        res = LTG
             except:
                 pass
 
