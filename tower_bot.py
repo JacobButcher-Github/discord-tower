@@ -1,23 +1,20 @@
+from initiative import Initiative
+from constance import *
+
 from discord import Client, DMChannel, GroupChannel
 from random import randint
-from initiative import Initiative
-
-
-MAX_ROLLS = 100
-MAX_SIDES = 1000
-LTG = 'https://tenor.com/view/low-tier-god-ltg-gif-24660602'
 
 
 class TowerClient(Client):
     async def on_ready(self):
         print(f'Logged in as {self.user}')
         self.reset()
-    
+
 
     async def on_message(self, message):
         if message.author == self.user or type(message.channel) in [DMChannel, GroupChannel]:
             return
-        
+
         txt = message.content.lower()
 
         if txt.startswith('.tower'):
@@ -29,28 +26,28 @@ class TowerClient(Client):
                 match args[1]:
                     case 'help':
                         res = self.help_text(args)
-                    
+
                     case 'stats':
                         res = self.stats(args)
-                    
+
                     case 'hp':
                         res = self.hp_handler(args)
-                    
+
                     case 'batcon':
                         res = self.batcon_handler(args)
-                    
+
                     case 'density':
                         res = self.density_handler(args)
-                    
+
                     case 'turn':
                         res = self.turn_handler(args)
 
                     case 'caco':
                         res = self.caco_handler(args)
 
-                    case 'crit': 
+                    case 'crit':
                         res = self.calc_crit(args)
-                    
+
                     case 'roll':
                         res = self.roll(args)
 
@@ -59,15 +56,15 @@ class TowerClient(Client):
 
                     case 'reset':
                         res = self.reset()
-                    
+
                     case 'tcr':
                         res = self.tcr()
-                    
+
                     case 'kerta':
                         res = self.kerta()
-            
+
             await message.channel.send(res)
-    
+
 
     def help_text(self, args):
         res = '.tower help [1-4]'
@@ -89,7 +86,7 @@ class TowerClient(Client):
                         ".tower turn sub [Number] -> Subtracts number from current turn\n" +
                         ".tower turn -> Displays current turn"
                     )
-                
+
                 case '2':
                     res = (
                         ".tower batcon set [String]-> Sets current battle condition\n" +
@@ -101,7 +98,7 @@ class TowerClient(Client):
                         ".tower density sub [Number] -> Subtracts number from current density\n" +
                         ".tower density -> Displays current Shinsu Density"
                     )
-                
+
                 case '3':
                     res = (
                         ".tower caco -> Gives current value of caco\n" +
@@ -112,7 +109,7 @@ class TowerClient(Client):
                         ".tower crit [chance] [damage of move] [# of times used] -> Calculates the damage complete with crit\n" +
                         ".tower roll [optional number (max 100)]d[sides (max 1000)]"
                     )
-                
+
                 case '4':
                     res = (
                         ".tower initiative add [Name] [Priority Speed] -> Prepares person in the queue\n" +
@@ -137,7 +134,7 @@ class TowerClient(Client):
                     res = self.boss_stats
                 else:
                     res = 'boss stats not set'
-            
+
             case 7 | 8:
                 if args[2] == 'set':
                     try:
@@ -145,14 +142,14 @@ class TowerClient(Client):
                         hp = int(args[4])
                         spd = int(args[5])
                         shi = int(args[6])
-                        
+
                         self.boss_stats = f'{atk}atk/{hp}hp/{spd}spd/{shi}shi'
                         self.boss_hp = hp
 
                         if len(args) == 8:
                             fifth = int(args[7])
                             self.boss_stats += f'/{fifth}???'
-                        
+
                         res = 'stats set'
                     except:
                         pass
@@ -185,7 +182,7 @@ class TowerClient(Client):
 
     def batcon_handler(self, args):
         res = "Not Set"
-        
+
         if (len(args) == 2):
             if (self.batcon != ""):
                 res = self.batcon
@@ -195,9 +192,9 @@ class TowerClient(Client):
             for i in range(3, len(args)):
                 res += args[i]+" "
                 self.batcon = res
-        
+
         return res
-    
+
 
     def density_handler(self, args):
         res = 'invalid density'
@@ -208,7 +205,7 @@ class TowerClient(Client):
                     res = f'{self.density} density'
                 else:
                     res = 'density not set'
-            
+
             case 3:
                 if args[2] == 'rules':
                     res = (
@@ -241,7 +238,7 @@ class TowerClient(Client):
                         case 'set':
                             self.density = num
                             res = f'density set to {self.density}'
-                            
+
                         case 'add':
                             self.density += num
                             res = f'density raised to {self.density}'
@@ -251,9 +248,9 @@ class TowerClient(Client):
                             res = f'density lowered to {self.density}'
                 except:
                     pass
-        
+
         return res
-    
+
 
     def turn_handler(self, args):
         res = 'invalid turn'
@@ -273,7 +270,7 @@ class TowerClient(Client):
                         case 'set':
                             self.turn = num
                             res = f'turn set to {self.turn}'
-                            
+
                         case 'add':
                             self.turn += num
                             self.roll_for.next_turn()
@@ -284,7 +281,7 @@ class TowerClient(Client):
                             res = f'turn reverted to {self.turn}'
                 except:
                     pass
-        
+
         return res
 
 
@@ -319,7 +316,7 @@ class TowerClient(Client):
                 chance = int(args[2])
                 dmg = int(args[3])
                 times = int(args[4])
-                
+
                 res = f'crit for'
 
                 dmg_sum = 0
@@ -328,13 +325,13 @@ class TowerClient(Client):
                     crit = dmg * (2 ** self.roll_success(chance))
                     res += f' {crit}'
                     dmg_sum += crit
-                
+
                 res += f' ({dmg_sum})'
             except:
                 pass
-        
+
         return res
-    
+
 
     def roll(self, args):
         res = 'invalid roll'
@@ -396,7 +393,7 @@ class TowerClient(Client):
         if (len(args) == 2):
             res = self.roll_for.display_queue()
             return res if res else 'empty'
-        
+
         if (len(args) == 3 and args[2] == "list"):
             res = self.roll_for.display_list()
             return res if res else 'empty'
@@ -404,22 +401,22 @@ class TowerClient(Client):
         if (len(args) == 3 and args[2] == "next"):
             res = self.roll_for.next_player()
             return res
-        
+
         elif(len(args) == 5 and args[2] == "add"):
             res = f"{args[3]} added"
             self.roll_for.add_player(args[3], int(args[4]))
             return res
-        
+
         elif(len(args) == 5 and args[2] == "update"):
             res = f"{args[3]} updated"
             self.roll_for.update_player(args[3], int(args[4]))
             return res
-        
+
         elif(len(args) == 4 and args[2] == "remove"):
             res = f"{args[3]} removed"
             self.roll_for.remove_player(args[3])
             return res
-        
+
         return res
 
 
@@ -434,11 +431,11 @@ class TowerClient(Client):
         self.roll_for = Initiative()
 
         return 'all fields reset'
-    
+
 
     def tcr(self):
         return ('<https://drmmo.proboards.com/thread/6403/tower-comprehensive-rules>\n' +
                 'https://media.discordapp.net/attachments/245589536845856777/1111426152096071760/makesweet-ghv12k.gif?ex=65a070c3&is=658dfbc3&hm=25dd2c292fae849b2a832804759a5b43aae9e016c3913829f5826de693e3dab6&')
-    
+
     def kerta(self):
         return ("Kerta🧍‍♂️40,000 HP ❤️8000 atk💪7500 spd 🏃Unresistable 🚫 Statuses blood field 🩸30 stacks every action 🎬Reactive Grab 🤝 that heals him 💗8000 targeted AoE 🌋 hybrid ☯️Cooldown is only ☝️ turn too 🕐Instant attack and move action per 10 bleeding ‼️ Sets attack, speed, shinsu to 0️⃣ when grabbed with Honden's🧙‍♂️ Chains ⛓️ + sealed 🔒. Multi ranged 🎯grab with it too! Has alligators 🐊 he didn't even use!")
