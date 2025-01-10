@@ -4,34 +4,35 @@ from collections import deque
 class Initiative:
     def __init__(self):
         self.goingnext: deque[str] = deque()
-        self.player_list = list()
-        self.used = set()
-        self.exists = set()
+        self.player_list: list[dict[str, int | str]] = []
+        # Used exclusively exists in case someone new shows up in the middle of the fight
+        self.used: set[str] = set()
+        self.exists: set[str] = set()
 
     def set_queue(self):
-        self.player_list.sort(key=lambda x: x[0])
+        self.player_list.sort(key=lambda x: x["prio"])
         self.goingnext = deque()
 
         for i in self.player_list:
-            if i[1] not in self.used and i[1] not in self.goingnext:
-                self.goingnext.append(i[1])
+            if i["name"] not in self.used and isinstance(i["name"], str):
+                self.goingnext.append(i["name"])
 
-    def add_player(self, name, prio):
-        self.player_list.append((prio, name))
+    def add_player(self, name: str, prio: int):
+        self.player_list.append({"name": name, "prio": prio})
         self.exists.add(name)
         self.set_queue()
 
-    def update_player(self, name, prio):
+    def update_player(self, name: str, prio: int):
         for i in self.player_list:
-            if i[1] == name:
-                i[0] = prio
+            if i["name"] == name:
+                i["prio"] = prio
                 break
         self.set_queue()
 
-    def remove_player(self, name):
+    def remove_player(self, name: str):
         for i in self.player_list:
-            if i[1] == name:
-                self.player_list.pop(i)
+            if i["name"] == name:
+                self.player_list.remove(i)
                 break
         self.set_queue()
 
@@ -47,13 +48,8 @@ class Initiative:
         res = ""
 
         for i in self.player_list[::-1]:
-            res += f"{i[1]}: {i[0]}\n"
+            res += f"{i["name"]}: {i["prio"]}\n"
         return res
 
     def display_queue(self):
-        res = ""
-
-        for i in self.goingnext[::-1]:
-            res += f"{i}\n"
-
-        return res
+        return "\n".join(self.goingnext)
