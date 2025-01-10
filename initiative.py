@@ -3,65 +3,57 @@ from collections import deque
 
 class Initiative:
     def __init__(self):
-        self.goingnext = deque()
+        self.goingnext: deque[str] = deque()
         self.player_list = list()
         self.used = set()
         self.exists = set()
 
-
     def set_queue(self):
-        self.player_list.sort(key = lambda x: x[0])
+        self.player_list.sort(key=lambda x: x[0])
         self.goingnext = deque()
 
         for i in self.player_list:
             if i[1] not in self.used and i[1] not in self.goingnext:
                 self.goingnext.append(i[1])
-        
 
     def add_player(self, name, prio):
         self.player_list.append((prio, name))
         self.exists.add(name)
         self.set_queue()
 
-
     def update_player(self, name, prio):
         for i in self.player_list:
-            if (i[1] == name):
+            if i[1] == name:
                 i[0] = prio
                 break
-        self.setqueue()
-    
+        self.set_queue()
 
     def remove_player(self, name):
         for i in self.player_list:
-            if (i[1] == name):
+            if i[1] == name:
                 self.player_list.pop(i)
                 break
-        self.setqueue()
-
+        self.set_queue()
 
     def next_player(self):
         next = self.goingnext.pop()
         self.used.add(next)
         return next
 
-
     def next_turn(self):
         self.used = set()
-
 
     def display_list(self):
         res = ""
 
         for i in self.player_list[::-1]:
-            res += (f"{i[1]}: {i[0]}\n")
+            res += f"{i[1]}: {i[0]}\n"
         return res
-    
 
     def display_queue(self):
         res = ""
 
         for i in self.goingnext[::-1]:
             res += f"{i}\n"
-        
+
         return res
