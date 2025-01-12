@@ -1,5 +1,31 @@
 TOKEN_FILE = 'token.txt'
 
+# Model
+STAT_ORDER = ('atk', 'hp', 'spd', 'shi')
+STATS = set([
+    'atk',
+    'hp',
+    'spd',
+    'shi',
+    'cry',
+    'psi',
+    'ki',
+    'unk',
+    'tra',
+    'obv',
+    'eld',
+    'com',
+    'eth',
+    # These are cursed
+    'cor',
+    'dig',
+    'cho',
+])
+FX = set([
+    'dr',
+    'dr%',
+])
+
 # Limits (for Urban)
 MAX_ROLLS = 100
 MAX_SIDES = 1000
