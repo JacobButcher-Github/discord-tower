@@ -10,9 +10,18 @@ class Character:
         self.cur_stats = base_stats.copy()
         self.cur_extra_stats = extra_stats.copy() if extra_stats else None
 
+        '''
+        {
+            <effect>: {
+                'timer': <turns>,
+                <affected_stat>: <tick_amount>,
+            },
+        }
+        '''
         self.effects = {}
 
 
+    # Name - #atk/#hp/#spd/#shi/...(/...)
     def get_stats(self, base: bool = False) -> str:
         stats = self.base_stats if base else self.cur_stats
         extra_stats = self.extra_stats if base else self.cur_extra_stats
@@ -50,3 +59,30 @@ class Character:
 
         if tar and type(tar[stat]) is not str:
             tar[stat] += diff
+
+
+    def damage(self, amount: int) -> None:
+        # dmg amp
+        if 'vuln' in self.effects:
+            amount += self.effects['vuln']
+
+        if 'vuln%' in self.effects:
+            amount *= self.effects['vuln%']
+
+        # dmg reduc
+        if 'dr%' in self.effects:
+            amount = int(amount * self.effects['dr%'])
+
+        if 'dr' in self.effects:
+            amount = max(0, amount - self.effects['dr'])
+
+        self.cur_stats['hp'] -= amount
+
+
+    def heal(self, amount: int) -> None:
+        self.cur_stats['hp'] = min(self.base_stats['hp'], self.cur_stats['hp'] + amount)
+
+
+    def turn_tick(self, turn: int) -> None:
+        for effect in self.effects:
+            pass
