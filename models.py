@@ -69,6 +69,8 @@ class Character:
         if 'vuln%' in self.effects:
             amount *= self.effects['vuln%']
 
+        # TODO: damage types
+
         # dmg reduc
         if 'dr%' in self.effects:
             amount = int(amount * self.effects['dr%'])
@@ -76,7 +78,10 @@ class Character:
         if 'dr' in self.effects:
             amount = max(0, amount - self.effects['dr'])
 
-        self.cur_stats['hp'] -= amount
+        if self.cur_stats['hp'] > 0:
+            self.cur_stats['hp'] = max(0, self.cur_stats['hp'] - amount)
+        else:
+            self.cur_stats['hp'] -= amount
 
 
     def heal(self, amount: int) -> None:
