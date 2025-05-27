@@ -23,6 +23,9 @@ class Character:
                 'timer': <turns>,
                 <affected_stat>: <tick_amount>,
             },
+            <vuln/vuln%>: {
+                'amount': <amount>,
+            }
         }
         """
         self.effects: dict[str, dict[str, int]] = {}
@@ -65,27 +68,28 @@ class Character:
         if tar and type(tar[stat]) is not str:
             tar[stat] += diff
 
-    def damage(self, amount: int) -> None:
+    def damage(self, amount: int, type: constance.DamageType, instances: int) -> None:
         # dmg amp
         if "vuln" in self.effects:
-            amount += self.effects["vuln"]
+            amount += self.effects["vuln"]["amount"]
 
         if "vuln%" in self.effects:
-            amount *= self.effects["vuln%"]
+            amount *= self.effects["vuln%"]["amount"]
 
-        # TODO: damage types
+        # damage types
+        if not type.is_piercing or not type.base_type == "true":
 
-        # dmg reduc
-        if "dr%" in self.effects:
-            amount = int(amount * self.effects["dr%"])
+            # dmg reduc
+            if "dr%" in self.effects:
+                amount = int(amount * self.effects["dr%"]["amount"])
 
-        if "dr" in self.effects:
-            amount = max(0, amount - self.effects["dr"])
+            if "dr" in self.effects:
+                amount = max(0, amount - self.effects["dr"]["amount"])
 
         if self.cur_stats["hp"] > 0:
-            self.cur_stats["hp"] = max(0, self.cur_stats["hp"] - amount)
+            self.cur_stats["hp"] = max(0, self.cur_stats["hp"] - amount * instances)
         else:
-            self.cur_stats["hp"] -= amount
+            self.cur_stats["hp"] -= amount * instances
 
     def heal(self, amount: int) -> None:
         self.cur_stats["hp"] = min(self.base_stats["hp"], self.cur_stats["hp"] + amount)

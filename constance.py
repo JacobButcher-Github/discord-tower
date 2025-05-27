@@ -1,3 +1,5 @@
+from enum import Enum
+
 TOKEN_FILE = "token.txt"
 
 # Model
@@ -29,6 +31,27 @@ FX = set(
         "dr%",
     ]
 )
+
+
+class DamageType(Enum):
+    PHYSICAL = ("physical", False)
+    PHYSICAL_PIERCING = ("physical", True)
+    MAGICAL = ("magical", False)
+    MAGICAL_PIERCING = ("magical", True)
+    TRUE = ("true", False)
+
+    def __init__(self, base_type: str, piercing: bool):
+        self._base_type = base_type
+        self._piercing = piercing
+
+    @property
+    def base_type(self):
+        return self._base_type
+
+    @property
+    def is_piercing(self):
+        return self._piercing
+
 
 # Limits (for Urban)
 MAX_ROLLS = 100
