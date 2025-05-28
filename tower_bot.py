@@ -25,46 +25,48 @@ class TowerClient(Client):
             res = "from tower? .tower help for list of commands."  # Default response
             args = txt.split()
 
-            if len(args) > 1:
-                match args[1]:
-                    case "help":
-                        res = self.help_text(args)
+            if len(args) <= 1:
+                return
 
-                    case "stats":
-                        res = self.stats(args)
+            match args[1]:
+                case "help":
+                    res = self.help_text(args)
 
-                    case "hp":
-                        res = self.hp_handler(args)
+                case "stats":
+                    res = self.stats(args)
 
-                    case "batcon":
-                        res = self.batcon_handler(args)
+                case "hp":
+                    res = self.hp_handler(args)
 
-                    case "density":
-                        res = self.density_handler(args)
+                case "batcon":
+                    res = self.batcon_handler(args)
 
-                    case "turn":
-                        res = self.turn_handler(args)
+                case "density":
+                    res = self.density_handler(args)
 
-                    case "caco":
-                        res = self.caco_handler(args)
+                case "turn":
+                    res = self.turn_handler(args)
 
-                    case "crit":
-                        res = self.calc_crit(args)
+                case "caco":
+                    res = self.caco_handler(args)
 
-                    case "roll":
-                        res = self.roll(args)
+                case "crit":
+                    res = self.calc_crit(args)
 
-                    case "initiative":
-                        res = self.init_handler(args)
+                case "roll":
+                    res = self.roll(args)
 
-                    case "reset":
-                        res = self.reset()
+                case "initiative":
+                    res = self.init_handler(args)
 
-                    case "tcr":
-                        res = self.tcr()
+                case "reset":
+                    res = self.reset()
 
-                    case "kerta":
-                        res = self.kerta()
+                case "tcr":
+                    res = self.tcr()
+
+                case "kerta":
+                    res = self.kerta()
 
             await message.channel.send(res)
 
@@ -75,6 +77,7 @@ class TowerClient(Client):
             match args[2]:
                 case "1":
                     res = constance.HELP1
+
                 case "2":
                     res = constance.HELP2
 
@@ -166,25 +169,7 @@ class TowerClient(Client):
 
             case 3:
                 if args[2] == "rules":
-                    res = (
-                        "In certain areas within the Tower, characters may encounter areas with high shinsu density. "
-                        + "These areas become more and more common the further up the Tower a character goes. "
-                        + "When shinsu density reaches certain levels, various effects will be applied to all entities within that area. "
-                        + "All effects of lower levels of shinsu density are also applied at a higher level of shinsu density. "
-                        + "At the end of each turn, if a character in an area with high shinsu density has lost shinsu, "
-                        + "they can absorb 10 shinsu from the area and lower the level of shinsu density by 1, then that character regains 10 shinsu.\n\n"
-                        + 'Characters which have a skill named "Shinsu Resistance" are unaffected by the effects of shinsu density at levels equal '
-                        + "to or less than their shinsu resistance level.\n\n"
-                        + "Level 5 - Characters lose hp equal to the shinsu density level at the end of each turn\n"
-                        + "Level 10 - Weapons that are not needles, swords, spears, and hooks deal halved damage\n"
-                        + "Level 15 - Characters lose the ability to take positions\n"
-                        + "Level 20 - Magical skills are treated as though 10 less shinsu was used on them\n"
-                        + "Level 25 - Characters lose attack and speed equal to the shinsu density level\n"
-                        + "Level 30 - Weapons and items that are not needles, swords, spears, and hooks deal 0 damage and cease to function\n"
-                        + "Level 40 - Environmental effects are negated, magical skills are treated as though 30 less shinsu was used on them, "
-                        + "and physical attacks and skills deal halved damage\n"
-                        + "Level 50 - All entities lose the ability to move and take action"
-                    )
+                    res = constance.DENSITY
 
             case 4:
                 try:
@@ -288,46 +273,48 @@ class TowerClient(Client):
     def roll(self, args: list[str]):
         res = "invalid roll"
 
-        if len(args) == 3:
-            try:
-                if "d" in args[2]:
-                    s = args[2].split("d")
+        if len(args) != 3:
+            return res
 
-                    if s[0]:
-                        times = int(s[0])
-                        dice = int(s[1])
+        try:
+            if "d" in args[2]:
+                s = args[2].split("d")
 
-                        if (
-                            0 < times <= constance.MAX_ROLLS
-                            and 0 < dice <= constance.MAX_SIDES
-                        ):
-                            rolls: list[int] = []
+                if s[0]:
+                    times = int(s[0])
+                    dice = int(s[1])
 
-                            for _ in range(times):
-                                rolls.append(randint(1, dice))
+                    if (
+                        0 < times <= constance.MAX_ROLLS
+                        and 0 < dice <= constance.MAX_SIDES
+                    ):
+                        rolls: list[int] = []
 
-                            res = f"{sum(rolls)}\t|"
+                        for _ in range(times):
+                            rolls.append(randint(1, dice))
 
-                            for roll in rolls:
-                                res += f"\t{roll}"
-                        else:
-                            res = constance.LTG
+                        res = f"{sum(rolls)}\t|"
+
+                        for roll in rolls:
+                            res += f"\t{roll}"
                     else:
-                        die = int(s[1])
-
-                        if 0 < die <= constance.MAX_SIDES:
-                            res = f"{randint(1, die)}"
-                        else:
-                            res = constance.LTG
+                        res = constance.LTG
                 else:
-                    die = int(args[2])
+                    die = int(s[1])
 
                     if 0 < die <= constance.MAX_SIDES:
                         res = f"{randint(1, die)}"
                     else:
                         res = constance.LTG
-            except:
-                pass
+            else:
+                die = int(args[2])
+
+                if 0 < die <= constance.MAX_SIDES:
+                    res = f"{randint(1, die)}"
+                else:
+                    res = constance.LTG
+        except:
+            pass
 
         return res
 

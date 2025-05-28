@@ -31,6 +31,13 @@ FX = set(
         "dr%",
     ]
 )
+BUFFS = set(
+    [
+        "dr",
+        "dr%",
+        "buff",
+    ]
+)
 
 
 class DamageType(Enum):
@@ -98,6 +105,26 @@ HELP4 = (
     + ".tower initiative list -> give list of all players\n"
     + ".tower initiative remove [Name] -> Removes a person from queue (If ko'd, for instance)\n\n"
     + ".tower reset -> resets all fields"
+)
+
+DENSITY = (
+    "In certain areas within the Tower, characters may encounter areas with high shinsu density. "
+    + "These areas become more and more common the further up the Tower a character goes. "
+    + "When shinsu density reaches certain levels, various effects will be applied to all entities within that area. "
+    + "All effects of lower levels of shinsu density are also applied at a higher level of shinsu density. "
+    + "At the end of each turn, if a character in an area with high shinsu density has lost shinsu, "
+    + "they can absorb 10 shinsu from the area and lower the level of shinsu density by 1, then that character regains 10 shinsu.\n\n"
+    + 'Characters which have a skill named "Shinsu Resistance" are unaffected by the effects of shinsu density at levels equal '
+    + "to or less than their shinsu resistance level.\n\n"
+    + "Level 5 - Characters lose hp equal to the shinsu density level at the end of each turn\n"
+    + "Level 10 - Weapons that are not needles, swords, spears, and hooks deal halved damage\n"
+    + "Level 15 - Characters lose the ability to take positions\n"
+    + "Level 20 - Magical skills are treated as though 10 less shinsu was used on them\n"
+    + "Level 25 - Characters lose attack and speed equal to the shinsu density level\n"
+    + "Level 30 - Weapons and items that are not needles, swords, spears, and hooks deal 0 damage and cease to function\n"
+    + "Level 40 - Environmental effects are negated, magical skills are treated as though 30 less shinsu was used on them, "
+    + "and physical attacks and skills deal halved damage\n"
+    + "Level 50 - All entities lose the ability to move and take action"
 )
 
 # Media
