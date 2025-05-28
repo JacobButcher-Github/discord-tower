@@ -22,6 +22,7 @@ class Character:
             <effect>: {
                 'timer': <turns>,
                 <affected_stat>: <tick_amount>,
+                'stacks': <stack_amount>,
             },
             <vuln/vuln%>: {
                 'amount': <amount>,
@@ -94,6 +95,27 @@ class Character:
     def heal(self, amount: int) -> None:
         self.cur_stats["hp"] = min(self.base_stats["hp"], self.cur_stats["hp"] + amount)
 
-    def turn_tick(self, turn: int) -> None:
+    def turn_tick(self) -> None:
         for effect in self.effects:
-            pass
+            if effect in constance.BUFFS:
+                continue
+
+            info = self.effects[effect]
+
+            for stat in self.cur_stats:
+                if stat in info:
+                    self.cur_stats[stat] -= info["stacks"] * info[stat]
+
+            info["timer"] -= 1
+
+            if not info["timer"]:
+                del self.effects[effect]
+
+
+    def calc_prio(self) -> int:
+        spd = self.cur_stats["spd"]
+
+        if "prio" in self.effects:
+            spd *= self.effects["prio"]
+
+        return spd
