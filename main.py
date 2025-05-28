@@ -10,6 +10,6 @@ if __name__ == "__main__":
     intents.message_content = True
 
     client: TowerClient = TowerClient(intents=intents)
-    register_commands(client.tree)
+    register_commands(client, client.tree)
 
     client.run(token)
