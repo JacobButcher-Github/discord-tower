@@ -1,15 +1,25 @@
 from random import randint
 
-from discord import Client, DMChannel, GroupChannel, Message
+from discord import Client, DMChannel, GroupChannel, Intents, Message
+from discord.app_commands import CommandTree
 
 import constance
 from initiative import Initiative
 
 
 class TowerClient(Client):
+    def __init__(self, *, intents: Intents):
+        super().__init__(intents=intents)
+        self.tree: CommandTree[TowerClient] = CommandTree(self)
+
     async def on_ready(self):
         print(f"Logged in as {self.user}")
         _ = self.reset()
+        try:
+            synced = await self.tree.sync()
+            print(f"Synced {len(synced)} command(s)")
+        except Exception as e:
+            print(f"Error syncing commands: {e}")
 
     async def on_message(self, message: Message):
         if message.author == self.user or type(message.channel) in [
